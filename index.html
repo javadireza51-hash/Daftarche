@@ -621,12 +621,36 @@
 </main>
 
 <footer>
-  اطلاعات این دفترچه به حساب کلود شما متصل است و با باز کردن همین فایل از گوشی یا کامپیوتر، همگام می‌ماند.<br>
+  اطلاعات این دفترچه روی همین مرورگر ذخیره می‌شود؛ برای دیدن آن‌ها روی گوشی و کامپیوتر هر دو، از «⚙️ همگام‌سازی Google Sheet» استفاده کنید.<br>
   یادآوری‌ها فقط زمانی زنگ می‌زنند که این صفحه باز باشد.
 </footer>
 
 <script>
 // ---------- Storage helpers ----------
+// این برنامه هم داخل پیش‌نمایش کلود کار می‌کند (با window.storage) و هم به‌صورت
+// مستقل روی هاست شما (با localStorage) — خودش تشخیص می‌دهد کدام در دسترس است.
+function hasClaudeStorage(){
+  return typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
+}
+async function storageGet(key){
+  if(hasClaudeStorage()){
+    try{ return await window.storage.get(key, false); }catch(e){}
+  }
+  try{
+    const raw = localStorage.getItem('daftarche:'+key);
+    return raw!==null ? {key, value: raw} : null;
+  }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  if(hasClaudeStorage()){
+    try{ return await window.storage.set(key, value, false); }catch(e){}
+  }
+  try{
+    localStorage.setItem('daftarche:'+key, value);
+    return {key, value};
+  }catch(e){ return null; }
+}
+
 // اگر می‌خواهید این فایل را کاملاً مستقل و از پیش متصل به گوگل‌شیت خودتان اجرا کنید،
 // می‌توانید لینک Web App را همین‌جا هم paste کنید (اختیاری - تنظیمات داخل برنامه هم کار می‌کند):
 let SHEET_API_URL = '';
@@ -645,7 +669,7 @@ async function loadArr(key){
   }
   let localItems = [];
   try{
-    const r = await window.storage.get(key, false);
+    const r = await storageGet(key);
     localItems = r && r.value ? JSON.parse(r.value) : [];
   }catch(e){}
   if(sheetItems){
@@ -661,7 +685,7 @@ async function loadArr(key){
 }
 
 async function saveArr(key, arr){
-  try{ await window.storage.set(key, JSON.stringify(arr), false); }
+  try{ await storageSet(key, JSON.stringify(arr)); }
   catch(e){ console.error('ذخیره‌سازی محلی ناموفق بود', e); }
   if(SHEET_API_URL){
     try{
@@ -807,7 +831,7 @@ document.getElementById('sheet-url-save').addEventListener('click', async ()=>{
   const val = document.getElementById('sheet-url-input').value.trim();
   if(!val){ alert('لطفاً لینک Web App را وارد کنید.'); return; }
   SHEET_API_URL = val;
-  try{ await window.storage.set('sheet_api_url', val, false); }catch(e){}
+  try{ await storageSet('sheet_api_url', val); }catch(e){}
   refreshSettingsBtn();
   setSyncStatus('در حال تست اتصال...');
   tasks = await loadArr('tasks');
@@ -818,7 +842,7 @@ document.getElementById('sheet-url-save').addEventListener('click', async ()=>{
 document.getElementById('sheet-url-clear').addEventListener('click', async ()=>{
   SHEET_API_URL = '';
   document.getElementById('sheet-url-input').value = '';
-  try{ await window.storage.set('sheet_api_url', '', false); }catch(e){}
+  try{ await storageSet('sheet_api_url', ''); }catch(e){}
   refreshSettingsBtn();
   setSyncStatus('اتصال قطع شد؛ فقط از حافظهٔ محلی استفاده می‌شود.');
 });
@@ -1646,7 +1670,7 @@ function escapeHtml(str){
 // ---------- Init ----------
 (async function init(){
   try{
-    const r = await window.storage.get('sheet_api_url', false);
+    const r = await storageGet('sheet_api_url');
     if(r && r.value){
       SHEET_API_URL = r.value;
       document.getElementById('sheet-url-input').value = r.value;
