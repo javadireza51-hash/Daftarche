@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دفترچه روزانه</title>
+<meta name="theme-color" content="#1B2A41">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دفترچه روزانه">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A41;
+    --ink-2:#2C3E58;
+    --cream:#F7F3EA;
+    --paper:#FFFFFF;
+    --gold:#C9A227;
+    --gold-dark:#9C7D1A;
+    --terracotta:#B4533C;
+    --sage:#4F7A5D;
+    --line:#E4DCC8;
+    --text-soft:#6B6357;
+    --shadow: 0 2px 10px rgba(27,42,65,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Vazirmatn',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  /* Header styled like a passbook cover */
+  header{
+    background:linear-gradient(135deg,var(--ink) 0%,var(--ink-2) 100%);
+    color:var(--cream);
+    padding:22px 20px 0 20px;
+    position:relative;
+  }
+  header .top-row{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    max-width:960px;margin:0 auto;
+  }
+  header h1{
+    margin:0;font-size:22px;font-weight:800;letter-spacing:.5px;
+  }
+  header p.sub{
+    margin:4px 0 0;font-size:12.5px;color:#C7CEDA;font-weight:400;
+  }
+  .perforation{
+    max-width:960px;margin:16px auto 0;
+    height:14px;
+    background-image: radial-gradient(circle, var(--cream) 4px, transparent 4.2px);
+    background-size: 22px 14px;
+    background-position: 8px 0;
+    background-repeat: repeat-x;
+  }
+  nav{
+    max-width:960px;margin:0 auto;
+    display:flex;gap:6px;padding:0 4px;
+    overflow-x:auto;
+  }
+  nav button{
+    flex:1;min-width:110px;
+    background:var(--paper);
+    border:none;border-radius:10px 10px 0 0;
+    padding:12px 10px;
+    font-family:inherit;font-size:13.5px;font-weight:600;
+    color:var(--text-soft);cursor:pointer;
+    transition:.15s;
+    border-bottom:3px solid transparent;
+  }
+  nav button.active{
+    color:var(--ink);
+    border-bottom:3px solid var(--gold);
+    background:var(--paper);
+  }
+  main{
+    max-width:960px;margin:0 auto;padding:20px 14px 60px;
+  }
+  section.panel{display:none;}
+  section.panel.active{display:block;}
+  .card{
+    background:var(--paper);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    padding:16px;
+    margin-bottom:14px;
+    border:1px solid var(--line);
+  }
+  .card h2{
+    margin:0 0 12px;font-size:16px;font-weight:700;color:var(--ink);
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block;}
+  label{
+    display:block;font-size:12.5px;color:var(--text-soft);margin:10px 0 4px;font-weight:600;
+  }
+  input[type=text],input[type=date],input[type=datetime-local],input[type=number],textarea,select{
+    width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:13.5px;background:#FCFAF4;color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:54px;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:140px;}
+  .btn{
+    border:none;border-radius:8px;padding:9px 16px;font-family:inherit;
+    font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;
+  }
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:hover{background:var(--ink-2);}
+  .btn-gold{background:var(--gold);color:var(--ink);}
+  .btn-gold:hover{background:var(--gold-dark);color:#fff;}
+  .btn-ghost{background:transparent;color:var(--terracotta);border:1px solid var(--terracotta);}
+  .btn-ghost:hover{background:var(--terracotta);color:#fff;}
+  .btn-rec{background:var(--terracotta);color:#fff;}
+  .btn-rec.recording{background:#7d2c1c;animation:pulse 1.1s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(180,83,60,.5);}70%{box-shadow:0 0 0 10px rgba(180,83,60,0);}100%{box-shadow:0 0 0 0 rgba(180,83,60,0);}}
+  .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .item{
+    border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;
+    background:#FCFAF4;
+  }
+  .item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .item-title{font-weight:700;font-size:14px;color:var(--ink);}
+  .item-meta{font-size:12px;color:var(--text-soft);margin-top:3px;}
+  .badge{
+    display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;
+    margin-inline-start:6px;
+  }
+  .badge-income{background:#E4EFE7;color:var(--sage);}
+  .badge-expense{background:#F4E4DF;color:var(--terracotta);}
+  .badge-due{background:#FBEFD0;color:var(--gold-dark);}
+  .badge-overdue{background:#F6DCD5;color:var(--terracotta);}
+  .item-actions{display:flex;gap:6px;}
+  .icon-btn{
+    background:none;border:none;cursor:pointer;font-size:15px;color:var(--text-soft);
+    padding:2px 4px;
+  }
+  .icon-btn:hover{color:var(--terracotta);}
+  .empty{
+    text-align:center;color:var(--text-soft);font-size:13px;padding:24px 10px;
+  }
+  .attach-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .file-chip{
+    display:inline-flex;align-items:center;gap:6px;background:#EFE9D8;color:var(--ink);
+    padding:4px 10px;border-radius:20px;font-size:12px;
+  }
+  audio{width:100%;margin-top:8px;height:34px;}
+  .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+  .summary-box{
+    background:var(--paper);border-radius:12px;padding:14px 10px;text-align:center;
+    box-shadow:var(--shadow);border:1px solid var(--line);
+  }
+  .summary-box .val{font-size:17px;font-weight:800;}
+  .summary-box .lbl{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .val.income{color:var(--sage);}
+  .val.expense{color:var(--terracotta);}
+  .val.balance{color:var(--ink);}
+  footer{
+    text-align:center;color:var(--text-soft);font-size:11.5px;padding:16px;
+  }
+  .notify-btn{
+    position:absolute;left:16px;top:20px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);
+    color:var(--cream);border-radius:20px;padding:6px 12px;font-size:11.5px;
+    font-family:inherit;cursor:pointer;
+  }
+  .notify-btn.granted{background:var(--sage);border-color:var(--sage);}
+  #ring-banner{
+    display:none;
+    position:sticky;top:0;z-index:50;
+    background:var(--terracotta);color:#fff;
+    padding:12px 16px;text-align:center;font-size:13.5px;font-weight:700;
+    box-shadow:0 3px 10px rgba(0,0,0,.2);
+  }
+  #ring-banner.show{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+  #ring-banner button{
+    background:#fff;color:var(--terracotta);border:none;border-radius:8px;
+    padding:6px 14px;font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer;
+  }
+  progress{width:100%;height:8px;border-radius:6px;overflow:hidden;margin-top:6px;}
+  progress::-webkit-progress-bar{background:var(--line);border-radius:6px;}
+  progress::-webkit-progress-value{background:var(--gold);border-radius:6px;}
+  @media(max-width:520px){
+    .summary-grid{grid-template-columns:1fr 1fr;}
+    header h1{font-size:19px;}
+  }
+  /* Task checkbox / done state */
+  .item-top{align-items:flex-start;}
+  .task-check{
+    width:22px;height:22px;flex-shrink:0;margin-inline-end:10px;margin-top:2px;
+    accent-color:var(--sage);cursor:pointer;
+  }
+  .item.done{opacity:.55;}
+  .item.done .item-title{text-decoration:line-through;}
+  .task-row{display:flex;align-items:flex-start;}
+  .task-body{flex:1;}
+  /* Install button */
+  .install-btn{
+    position:absolute;left:16px;top:56px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);
+    color:var(--cream);border-radius:20px;padding:6px 12px;font-size:11.5px;
+    font-family:inherit;cursor:pointer;display:none;
+  }
+  .install-btn.show{display:block;}
+  /* Calendar */
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .cal-header .cal-title{font-weight:700;font-size:15px;}
+  .cal-header button{
+    background:var(--cream);border:1px solid var(--line);border-radius:8px;
+    padding:6px 12px;font-family:inherit;font-size:13px;cursor:pointer;color:var(--ink);
+  }
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-dow{text-align:center;font-size:11px;color:var(--text-soft);font-weight:700;padding:4px 0;}
+  .cal-cell{
+    aspect-ratio:1;border-radius:8px;border:1px solid var(--line);background:#FCFAF4;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    cursor:pointer;position:relative;padding:2px;
+  }
+  .cal-cell.other-month{opacity:.35;}
+  .cal-cell.today{border-color:var(--gold);border-width:2px;}
+  .cal-cell.selected{background:var(--ink);color:#fff;}
+  .cal-cell .g-num{font-size:12.5px;font-weight:700;}
+  .cal-cell .j-num{font-size:9.5px;color:var(--text-soft);}
+  .cal-cell.selected .j-num{color:#C7CEDA;}
+  .cal-dots{display:flex;gap:2px;position:absolute;bottom:3px;}
+  .cal-dot{width:5px;height:5px;border-radius:50%;}
+  .dot-task{background:var(--gold);}
+  .dot-fin{background:var(--sage);}
+  .dot-loan{background:var(--terracotta);}
+  .day-panel{margin-top:14px;}
+  .day-panel h3{font-size:14px;margin:0 0 8px;}
+  .quick-add{display:flex;gap:8px;margin-top:10px;}
+  .quick-add input{flex:1;}
+  /* Jalali date picker */
+  .jdate-wrap{position:relative;}
+  .jdate-display{cursor:pointer;background:#FCFAF4 url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236B6357%22 stroke-width=%222%22%3E%3Crect x=%223%22 y=%225%22 width=%2218%22 height=%2216%22 rx=%222%22/%3E%3Cpath d=%22M3 10h18M8 3v4M16 3v4%22/%3E%3C/svg%3E') no-repeat left 10px center/16px;}
+  .jdate-popup{
+    display:none;position:absolute;z-index:60;top:calc(100% + 4px);right:0;left:0;
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 6px 20px rgba(0,0,0,.15);padding:10px;min-width:240px;
+  }
+  .jdate-popup.open{display:block;}
+  .jdate-pop-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .jdate-pop-header button{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-family:inherit;cursor:pointer;font-size:12px;}
+  .jdate-pop-title{font-weight:700;font-size:13px;}
+  .jdate-pop-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;}
+  .jdow{text-align:center;font-size:10px;color:var(--text-soft);font-weight:700;}
+  .jdate-pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .jday{
+    text-align:center;font-size:11.5px;padding:6px 0;border-radius:6px;cursor:pointer;
+  }
+  .jday:hover{background:var(--cream);}
+  .jday.other{opacity:.3;}
+  .jday.today{border:1px solid var(--gold);}
+  .jday.selected{background:var(--ink);color:#fff;}
+  /* Mic inline buttons */
+  .field-with-mic{display:flex;gap:6px;align-items:stretch;}
+  .field-with-mic input{flex:1;}
+  .mic-inline{
+    flex-shrink:0;background:var(--gold);color:var(--ink);border:none;border-radius:8px;
+    width:40px;font-size:15px;cursor:pointer;
+  }
+  .mic-inline.recording{background:var(--terracotta);color:#fff;animation:pulse 1.1s infinite;}
+  /* Settings / Sheet sync */
+  .settings-btn{
+    position:absolute;left:16px;top:92px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);
+    color:var(--cream);border-radius:20px;padding:6px 12px;font-size:11.5px;
+    font-family:inherit;cursor:pointer;
+  }
+  .settings-btn.connected{background:var(--sage);border-color:var(--sage);}
+  #settings-panel{
+    display:none;max-width:960px;margin:0 auto;padding:14px 14px 0;
+  }
+  #settings-panel.open{display:block;}
+  #settings-panel .card input[type=text]{margin-bottom:8px;}
+  #settings-status{font-size:12px;margin-top:6px;color:var(--text-soft);}
+  .voice-cmd-box{
+    background:#F1E8D0;border:1px dashed var(--gold-dark);border-radius:10px;
+    padding:10px 12px;margin:12px 0;
+  }
+  .voice-cmd-status{margin-top:6px;font-size:12px;color:var(--text-soft);min-height:16px;}
+  .reminder-row{display:flex;gap:8px;}
+  .reminder-row .jdate-wrap{flex:2;}
+  .reminder-row input[type=time]{flex:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-row">
+    <div>
+      <h1>📒 دفترچه روزانه</h1>
+      <p class="sub">کارها · حساب و مخارج · تسهیلات و اقساط</p>
+    </div>
+  </div>
+  <button class="notify-btn" id="notify-permission-btn">🔔 فعال‌سازی اعلان</button>
+  <button class="install-btn" id="install-btn">⬇️ نصب برنامه</button>
+  <button class="settings-btn" id="settings-btn">⚙️ همگام‌سازی Google Sheet</button>
+  <div class="perforation"></div>
+  <nav>
+    <button data-tab="tasks" class="active">کارهای روزانه</button>
+    <button data-tab="finance">حساب و مخارج</button>
+    <button data-tab="loans">تسهیلات و اقساط</button>
+    <button data-tab="calendar">تقویم و برنامه‌ریزی</button>
+  </nav>
+</header>
+
+<div id="settings-panel">
+  <div class="card">
+    <h2><span class="dot"></span> همگام‌سازی با Google Sheet</h2>
+    <label>لینک Web App که از Google Apps Script گرفتید</label>
+    <input type="text" id="sheet-url-input" placeholder="https://script.google.com/macros/s/xxxx/exec" dir="ltr">
+    <div class="actions">
+      <button class="btn btn-primary" id="sheet-url-save">ذخیره و اتصال</button>
+      <button class="btn btn-ghost" id="sheet-url-clear">قطع اتصال (فقط حافظه محلی)</button>
+    </div>
+    <div id="settings-status"></div>
+    <div class="item-meta" style="margin-top:10px;">
+      توجه: فقط اطلاعات متنی کارها، تراکنش‌ها و اقساط با Google Sheet همگام می‌شود. فایل‌های پیوستی و یادداشت‌های صوتی فقط روی همین دستگاه ذخیره می‌مانند و بین دستگاه‌ها منتقل نمی‌شوند.
+    </div>
+  </div>
+</div>
+
+<div id="ring-banner">
+  <span id="ring-text">🔔 یادآوری</span>
+  <button id="ring-stop-btn">خاموش کردن</button>
+</div>
+
+<main>
+
+  <!-- TASKS PANEL -->
+  <section class="panel active" id="panel-tasks">
+    <div class="card">
+      <h2><span class="dot"></span> افزودن کار جدید</h2>
+      <div class="row">
+        <div>
+          <label>تاریخ</label>
+          <div class="jdate-wrap">
+            <input type="text" id="task-date-display" class="jdate-display" placeholder="انتخاب تاریخ" readonly>
+            <input type="hidden" id="task-date">
+            <div class="jdate-popup" id="task-date-popup">
+              <div class="jdate-pop-header">
+                <button type="button" data-nav="-1">◀</button>
+                <span class="jdate-pop-title"></span>
+                <button type="button" data-nav="1">▶</button>
+              </div>
+              <div class="jdate-pop-dow"></div>
+              <div class="jdate-pop-grid"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>مدت زمان اجرا (مثلاً ۱ ساعت)</label>
+          <div class="field-with-mic">
+            <input type="text" id="task-duration" placeholder="مثلاً ۳۰ دقیقه">
+            <button type="button" class="mic-inline" id="task-duration-mic" title="تبدیل صدا به متن">🎙️</button>
+          </div>
+        </div>
+      </div>
+      <div class="voice-cmd-box">
+        <button class="btn btn-gold" id="task-voice-cmd-btn" type="button">🎙️ فرمان صوتی هوشمند</button>
+        <div class="item-meta">بگویید یکی از این کلمه‌ها و بعد ادامه جمله را بگویید: «تاریخ»، «مدت»، «توضیح»، «یادآوری»</div>
+        <div class="voice-cmd-status" id="task-voice-cmd-status"></div>
+      </div>
+      <label>توضیح کار</label>
+      <textarea id="task-desc" placeholder="شرح کار را بنویسید یا با میکروفون ضبط کنید..."></textarea>
+      <div class="attach-row">
+        <button class="btn btn-gold" id="task-stt-btn" type="button">🎙️ تبدیل صدا به متن</button>
+        <button class="btn btn-rec" id="task-rec-btn" type="button">⏺️ ضبط صدا</button>
+        <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;">
+          📎 پیوست فایل
+          <input type="file" id="task-file" style="display:none;">
+        </label>
+      </div>
+      <div id="task-file-preview"></div>
+      <div id="task-audio-preview"></div>
+      <label>یادآوری (تاریخ و ساعت)</label>
+      <div class="reminder-row">
+        <div class="jdate-wrap">
+          <input type="text" id="task-reminder-date-display" class="jdate-display" placeholder="تاریخ یادآوری" readonly>
+          <input type="hidden" id="task-reminder-date">
+          <div class="jdate-popup" id="task-reminder-date-popup">
+            <div class="jdate-pop-header">
+              <button type="button" data-nav="-1">◀</button>
+              <span class="jdate-pop-title"></span>
+              <button type="button" data-nav="1">▶</button>
+            </div>
+            <div class="jdate-pop-dow"></div>
+            <div class="jdate-pop-grid"></div>
+          </div>
+        </div>
+        <input type="time" id="task-reminder-time">
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="task-save-btn">ذخیره کار</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span> فهرست کارها</h2>
+      <div id="tasks-list"></div>
+    </div>
+  </section>
+
+  <!-- FINANCE PANEL -->
+  <section class="panel" id="panel-finance">
+    <div class="summary-grid">
+      <div class="summary-box"><div class="val income" id="sum-income">۰</div><div class="lbl">جمع واریزی</div></div>
+      <div class="summary-box"><div class="val expense" id="sum-expense">۰</div><div class="lbl">جمع برداشت</div></div>
+      <div class="summary-box"><div class="val balance" id="sum-balance">۰</div><div class="lbl">مانده</div></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span> ثبت تراکنش</h2>
+      <div class="row">
+        <div>
+          <label>تاریخ</label>
+          <div class="jdate-wrap">
+            <input type="text" id="fin-date-display" class="jdate-display" placeholder="انتخاب تاریخ" readonly>
+            <input type="hidden" id="fin-date">
+            <div class="jdate-popup" id="fin-date-popup">
+              <div class="jdate-pop-header">
+                <button type="button" data-nav="-1">◀</button>
+                <span class="jdate-pop-title"></span>
+                <button type="button" data-nav="1">▶</button>
+              </div>
+              <div class="jdate-pop-dow"></div>
+              <div class="jdate-pop-grid"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>نوع تراکنش</label>
+          <select id="fin-type">
+            <option value="income">واریزی (درآمد)</option>
+            <option value="expense">برداشت (هزینه)</option>
+          </select>
+        </div>
+      </div>
+      <div class="voice-cmd-box">
+        <button class="btn btn-gold" id="fin-voice-cmd-btn" type="button">🎙️ فرمان صوتی هوشمند</button>
+        <div class="item-meta">بگویید: «تاریخ»، «بانک»، «مبلغ»، «مقصد» یا «توضیح» و بعد ادامه جمله را بگویید</div>
+        <div class="voice-cmd-status" id="fin-voice-cmd-status"></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>نام بانک / حساب</label>
+          <div class="field-with-mic">
+            <input type="text" id="fin-bank" placeholder="مثلاً بانک ملت">
+            <button type="button" class="mic-inline" id="fin-bank-mic" title="تبدیل صدا به متن">🎙️</button>
+          </div>
+        </div>
+        <div>
+          <label>مبلغ (تومان)</label>
+          <div class="field-with-mic">
+            <input type="number" id="fin-amount" placeholder="۰">
+            <button type="button" class="mic-inline" id="fin-amount-mic" title="تبدیل صدا به عدد">🎙️</button>
+          </div>
+        </div>
+      </div>
+      <label>مقصد / بابت</label>
+      <div class="field-with-mic">
+        <input type="text" id="fin-purpose" placeholder="مثلاً پرداخت قبض برق">
+        <button type="button" class="mic-inline" id="fin-purpose-mic" title="تبدیل صدا به متن">🎙️</button>
+      </div>
+      <label>توضیحات تکمیلی</label>
+      <textarea id="fin-desc" placeholder="توضیح بیشتر..."></textarea>
+      <div class="attach-row">
+        <button class="btn btn-gold" id="fin-stt-btn" type="button">🎙️ تبدیل صدا به متن</button>
+        <button class="btn btn-rec" id="fin-rec-btn" type="button">⏺️ ضبط صدا</button>
+        <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;">
+          📎 پیوست رسید / فایل
+          <input type="file" id="fin-file" style="display:none;">
+        </label>
+      </div>
+      <div id="fin-file-preview"></div>
+      <div id="fin-audio-preview"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="fin-save-btn">ذخیره تراکنش</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span> فهرست تراکنش‌ها</h2>
+      <div id="fin-list"></div>
+    </div>
+  </section>
+
+  <!-- LOANS PANEL -->
+  <section class="panel" id="panel-loans">
+    <div class="card">
+      <h2><span class="dot"></span> ثبت تسهیلات / وام</h2>
+      <div class="row">
+        <div>
+          <label>نام بانک</label>
+          <div class="field-with-mic">
+            <input type="text" id="loan-bank" placeholder="مثلاً بانک ملی">
+            <button type="button" class="mic-inline" id="loan-bank-mic" title="تبدیل صدا به متن">🎙️</button>
+          </div>
+        </div>
+        <div>
+          <label>عنوان تسهیلات</label>
+          <div class="field-with-mic">
+            <input type="text" id="loan-title" placeholder="مثلاً وام خودرو">
+            <button type="button" class="mic-inline" id="loan-title-mic" title="تبدیل صدا به متن">🎙️</button>
+          </div>
+        </div>
+      </div>
+      <div class="voice-cmd-box">
+        <button class="btn btn-gold" id="loan-voice-cmd-btn" type="button">🎙️ فرمان صوتی هوشمند</button>
+        <div class="item-meta">بگویید: «بانک»، «عنوان»، «مبلغ کل»، «مبلغ قسط»، «تعداد»، «تاریخ» یا «توضیح»</div>
+        <div class="voice-cmd-status" id="loan-voice-cmd-status"></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>مبلغ کل تسهیلات (تومان)</label>
+          <div class="field-with-mic">
+            <input type="number" id="loan-total" placeholder="۰">
+            <button type="button" class="mic-inline" id="loan-total-mic" title="تبدیل صدا به عدد">🎙️</button>
+          </div>
+        </div>
+        <div>
+          <label>مبلغ هر قسط (تومان)</label>
+          <div class="field-with-mic">
+            <input type="number" id="loan-installment" placeholder="۰">
+            <button type="button" class="mic-inline" id="loan-installment-mic" title="تبدیل صدا به عدد">🎙️</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>تعداد کل اقساط</label>
+          <div class="field-with-mic">
+            <input type="number" id="loan-count" placeholder="۰">
+            <button type="button" class="mic-inline" id="loan-count-mic" title="تبدیل صدا به عدد">🎙️</button>
+          </div>
+        </div>
+        <div>
+          <label>تعداد اقساط پرداخت شده</label>
+          <input type="number" id="loan-paid" placeholder="۰" value="0">
+        </div>
+      </div>
+      <label>تاریخ سررسید قسط بعدی</label>
+      <div class="jdate-wrap">
+        <input type="text" id="loan-due-display" class="jdate-display" placeholder="انتخاب تاریخ" readonly>
+        <input type="hidden" id="loan-due">
+        <div class="jdate-popup" id="loan-due-popup">
+          <div class="jdate-pop-header">
+            <button type="button" data-nav="-1">◀</button>
+            <span class="jdate-pop-title"></span>
+            <button type="button" data-nav="1">▶</button>
+          </div>
+          <div class="jdate-pop-dow"></div>
+          <div class="jdate-pop-grid"></div>
+        </div>
+      </div>
+      <label>یادآوری قسط (تاریخ و ساعت)</label>
+      <div class="reminder-row">
+        <div class="jdate-wrap">
+          <input type="text" id="loan-reminder-date-display" class="jdate-display" placeholder="تاریخ یادآوری" readonly>
+          <input type="hidden" id="loan-reminder-date">
+          <div class="jdate-popup" id="loan-reminder-date-popup">
+            <div class="jdate-pop-header">
+              <button type="button" data-nav="-1">◀</button>
+              <span class="jdate-pop-title"></span>
+              <button type="button" data-nav="1">▶</button>
+            </div>
+            <div class="jdate-pop-dow"></div>
+            <div class="jdate-pop-grid"></div>
+          </div>
+        </div>
+        <input type="time" id="loan-reminder-time">
+      </div>
+      <label>توضیحات</label>
+      <textarea id="loan-desc" placeholder="توضیح بیشتر درباره این تسهیلات..."></textarea>
+      <div class="attach-row">
+        <button class="btn btn-gold" id="loan-stt-btn" type="button">🎙️ تبدیل صدا به متن</button>
+        <label class="btn btn-ghost" style="display:inline-flex;align-items:center;cursor:pointer;">
+          📎 پیوست قرارداد / فایل
+          <input type="file" id="loan-file" style="display:none;">
+        </label>
+      </div>
+      <div id="loan-file-preview"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="loan-save-btn">ذخیره تسهیلات</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span> فهرست تسهیلات و اقساط</h2>
+      <div id="loans-list"></div>
+    </div>
+  </section>
+
+  <!-- CALENDAR PANEL -->
+  <section class="panel" id="panel-calendar">
+    <div class="card">
+      <div class="cal-header">
+        <button id="cal-prev">◀ ماه قبل</button>
+        <div class="cal-title" id="cal-title">-</div>
+        <button id="cal-next">ماه بعد ▶</button>
+      </div>
+      <div class="cal-grid" id="cal-dow"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="actions" style="margin-top:10px;">
+        <button class="btn btn-ghost" id="cal-today-btn">امروز</button>
+      </div>
+      <div class="day-panel" id="day-panel"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  اطلاعات این دفترچه به حساب کلود شما متصل است و با باز کردن همین فایل از گوشی یا کامپیوتر، همگام می‌ماند.<br>
+  یادآوری‌ها فقط زمانی زنگ می‌زنند که این صفحه باز باشد.
+</footer>
+
+<script>
+// ---------- Storage helpers ----------
+// اگر می‌خواهید این فایل را کاملاً مستقل و از پیش متصل به گوگل‌شیت خودتان اجرا کنید،
+// می‌توانید لینک Web App را همین‌جا هم paste کنید (اختیاری - تنظیمات داخل برنامه هم کار می‌کند):
+let SHEET_API_URL = '';
+
+async function loadArr(key){
+  let sheetItems = null;
+  if(SHEET_API_URL){
+    try{
+      const res = await fetch(SHEET_API_URL + '?type=' + encodeURIComponent(key));
+      const data = await res.json();
+      sheetItems = data.items || [];
+    }catch(e){
+      console.error('خواندن از Google Sheet ناموفق بود', e);
+      setSyncStatus('⚠️ اتصال به Google Sheet برقرار نشد؛ از نسخهٔ محلی استفاده می‌شود.');
+    }
+  }
+  let localItems = [];
+  try{
+    const r = await window.storage.get(key, false);
+    localItems = r && r.value ? JSON.parse(r.value) : [];
+  }catch(e){}
+  if(sheetItems){
+    const localById = {};
+    localItems.forEach(it=>{ localById[it.id]=it; });
+    return sheetItems.map(it=>{
+      const loc = localById[it.id];
+      if(loc){ return Object.assign({}, it, {file: loc.file||it.file||null, voice: loc.voice||it.voice||null}); }
+      return it;
+    });
+  }
+  return localItems;
+}
+
+async function saveArr(key, arr){
+  try{ await window.storage.set(key, JSON.stringify(arr), false); }
+  catch(e){ console.error('ذخیره‌سازی محلی ناموفق بود', e); }
+  if(SHEET_API_URL){
+    try{
+      const stripped = arr.map(item=>{
+        const copy = Object.assign({}, item);
+        delete copy.file; delete copy.voice;
+        return copy;
+      });
+      await fetch(SHEET_API_URL, {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({type:key, items: stripped})
+      });
+      setSyncStatus('✅ آخرین همگام‌سازی: ' + new Date().toLocaleTimeString('fa-IR'));
+    }catch(e){
+      console.error('همگام‌سازی با Google Sheet ناموفق بود', e);
+      setSyncStatus('⚠️ همگام‌سازی با Google Sheet ناموفق بود (اتصال اینترنت یا لینک را بررسی کنید).');
+    }
+  }
+}
+
+function setSyncStatus(msg){
+  const el = document.getElementById('settings-status');
+  if(el) el.textContent = msg;
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function fmtNum(n){
+  if(n===undefined||n===null||isNaN(n)) n=0;
+  return Number(n).toLocaleString('fa-IR');
+}
+function toFa(n){ return String(n).replace(/\d/g, d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+// Gregorian -> Jalali (Shamsi) conversion
+function toJalali(gy, gm, gd){
+  var g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+  var gy2 = (gm > 2) ? (gy + 1) : gy;
+  var days = 355666 + (365 * gy) + (~~((gy2 + 3) / 4)) - (~~((gy2 + 99) / 100)) + (~~((gy2 + 399) / 400)) + gd + g_d_m[gm - 1];
+  var jy = -1595 + (33 * ~~(days / 12053));
+  days %= 12053;
+  jy += 4 * ~~(days / 1461);
+  days %= 1461;
+  if (days > 365) { jy += ~~((days - 1) / 365); days = (days - 1) % 365; }
+  var jm, jd;
+  if (days < 186) { jm = 1 + ~~(days / 31); jd = 1 + (days % 31); }
+  else { jm = 7 + ~~((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+  return [jy, jm, jd];
+}
+const JALALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const PERSIAN_WEEKDAYS = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنج‌شنبه','جمعه','شنبه']; // JS getDay(): 0=Sun..6=Sat
+function weekdayFa(isoDate){
+  const d = new Date(isoDate + 'T00:00:00');
+  if(isNaN(d)) return '';
+  return PERSIAN_WEEKDAYS[d.getDay()];
+}
+function jalaliLabel(isoDate){
+  if(!isoDate) return '';
+  const d = new Date(isoDate + 'T00:00:00');
+  if(isNaN(d)) return isoDate;
+  const [jy,jm,jd] = toJalali(d.getFullYear(), d.getMonth()+1, d.getDate());
+  return weekdayFa(isoDate) + '، ' + toFa(jd) + ' ' + JALALI_MONTHS[jm-1] + ' ' + toFa(jy);
+}
+function jalaliShort(isoDate){
+  if(!isoDate) return '';
+  const d = new Date(isoDate + 'T00:00:00');
+  if(isNaN(d)) return '';
+  const [jy,jm,jd] = toJalali(d.getFullYear(), d.getMonth()+1, d.getDate());
+  return toFa(jd)+'/'+toFa(jm);
+}
+// Jalali -> Gregorian conversion (inverse)
+function toGregorian(jy, jm, jd){
+  jy += 1595;
+  var days = -355668 + (365 * jy) + ((~~(jy / 33)) * 8) + (~~(((jy % 33) + 3) / 4)) + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
+  var gy = 400 * (~~(days / 146097));
+  days %= 146097;
+  if (days > 36524) {
+    days -= 1;
+    gy += 100 * (~~(days / 36524));
+    days %= 36524;
+    if (days >= 365) days++;
+  }
+  gy += 4 * (~~(days / 1461));
+  days %= 1461;
+  if (days > 365) {
+    gy += (~~((days - 1) / 365));
+    days = (days - 1) % 365;
+  }
+  var gd = days + 1;
+  var isLeapG = (gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0);
+  var sal_a = [0, 31, isLeapG ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  var gm;
+  for (gm = 1; gm < 13; gm++) {
+    var v = sal_a[gm];
+    if (gd <= v) break;
+    gd -= v;
+  }
+  return [gy, gm, gd];
+}
+function jalaliMonthLength(jy, jm){
+  let nm = jm+1, ny = jy;
+  if(nm > 12){ nm = 1; ny = jy+1; }
+  const [gy1,gm1,gd1] = toGregorian(jy, jm, 1);
+  const [gy2,gm2,gd2] = toGregorian(ny, nm, 1);
+  const d1 = new Date(gy1, gm1-1, gd1);
+  const d2 = new Date(gy2, gm2-1, gd2);
+  return Math.round((d2-d1)/(1000*60*60*24));
+}
+function fileToBase64(file){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+function faDigitsToEn(str){
+  const faNums='۰۱۲۳۴۵۶۷۸۹', arNums='٠١٢٣٤٥٦٧٨٩';
+  return String(str).replace(/[۰-۹٠-٩]/g, c=>{
+    let i = faNums.indexOf(c); if(i>-1) return String(i);
+    i = arNums.indexOf(c); if(i>-1) return String(i);
+    return c;
+  });
+}
+
+const todayJ = (()=>{ const t=new Date(); return toJalali(t.getFullYear(), t.getMonth()+1, t.getDate()); })();
+
+let tasks = [], finances = [], loans = [];
+
+// ---------- Google Sheet sync settings ----------
+const settingsBtn = document.getElementById('settings-btn');
+settingsBtn.addEventListener('click', ()=>{
+  document.getElementById('settings-panel').classList.toggle('open');
+});
+function refreshSettingsBtn(){
+  if(SHEET_API_URL){
+    settingsBtn.textContent = '⚙️ متصل به Google Sheet';
+    settingsBtn.classList.add('connected');
+  } else {
+    settingsBtn.textContent = '⚙️ همگام‌سازی Google Sheet';
+    settingsBtn.classList.remove('connected');
+  }
+}
+document.getElementById('sheet-url-save').addEventListener('click', async ()=>{
+  const val = document.getElementById('sheet-url-input').value.trim();
+  if(!val){ alert('لطفاً لینک Web App را وارد کنید.'); return; }
+  SHEET_API_URL = val;
+  try{ await window.storage.set('sheet_api_url', val, false); }catch(e){}
+  refreshSettingsBtn();
+  setSyncStatus('در حال تست اتصال...');
+  tasks = await loadArr('tasks');
+  finances = await loadArr('finances');
+  loans = await loadArr('loans');
+  renderTasks(); renderFinance(); renderLoans(); renderCalendar();
+});
+document.getElementById('sheet-url-clear').addEventListener('click', async ()=>{
+  SHEET_API_URL = '';
+  document.getElementById('sheet-url-input').value = '';
+  try{ await window.storage.set('sheet_api_url', '', false); }catch(e){}
+  refreshSettingsBtn();
+  setSyncStatus('اتصال قطع شد؛ فقط از حافظهٔ محلی استفاده می‌شود.');
+});
+
+// ---------- Jalali date picker (reusable) ----------
+function setupJalaliPicker(hiddenId, displayId, popupId){
+  const hidden = document.getElementById(hiddenId);
+  const display = document.getElementById(displayId);
+  const popup = document.getElementById(popupId);
+  const titleEl = popup.querySelector('.jdate-pop-title');
+  const dowEl = popup.querySelector('.jdate-pop-dow');
+  const gridEl = popup.querySelector('.jdate-pop-grid');
+  const prevBtn = popup.querySelector('[data-nav="-1"]');
+  const nextBtn = popup.querySelector('[data-nav="1"]');
+  let viewJY = todayJ[0], viewJM = todayJ[1];
+
+  function gIso(jy,jm,jd){
+    const [gy,gm,gd] = toGregorian(jy,jm,jd);
+    return gy+'-'+String(gm).padStart(2,'0')+'-'+String(gd).padStart(2,'0');
+  }
+  function draw(){
+    titleEl.textContent = JALALI_MONTHS[viewJM-1] + ' ' + toFa(viewJY);
+    const dows = ['ش','ی','د','س','چ','پ','ج'];
+    dowEl.innerHTML = dows.map(d=>`<div class="jdow">${d}</div>`).join('');
+    const [gy1,gm1,gd1] = toGregorian(viewJY, viewJM, 1);
+    const firstG = new Date(gy1, gm1-1, gd1);
+    const leading = (firstG.getDay()+1)%7;
+    const monthLen = jalaliMonthLength(viewJY, viewJM);
+    let pm=viewJM-1, py=viewJY; if(pm<1){ pm=12; py--; }
+    const prevLen = jalaliMonthLength(py,pm);
+    let cells=[];
+    for(let i=0;i<leading;i++){ const d=prevLen-leading+1+i; cells.push({jd:d, iso:gIso(py,pm,d), other:true}); }
+    for(let d=1; d<=monthLen; d++){ cells.push({jd:d, iso:gIso(viewJY,viewJM,d), other:false}); }
+    let nm=viewJM+1, ny=viewJY; if(nm>12){ nm=1; ny++; }
+    let nd=1;
+    while(cells.length % 7 !== 0){ cells.push({jd:nd, iso:gIso(ny,nm,nd), other:true}); nd++; }
+    const todayIso = new Date().toISOString().slice(0,10);
+    gridEl.innerHTML = cells.map(c=>{
+      let cls='jday';
+      if(c.other) cls+=' other';
+      if(c.iso===todayIso) cls+=' today';
+      if(c.iso===hidden.value) cls+=' selected';
+      return `<div class="${cls}" data-iso="${c.iso}">${toFa(c.jd)}</div>`;
+    }).join('');
+  }
+  function open(){
+    if(hidden.value){
+      const d = new Date(hidden.value+'T00:00:00');
+      if(!isNaN(d)){
+        const [jy,jm] = toJalali(d.getFullYear(), d.getMonth()+1, d.getDate());
+        viewJY=jy; viewJM=jm;
+      }
+    } else { viewJY=todayJ[0]; viewJM=todayJ[1]; }
+    draw();
+    document.querySelectorAll('.jdate-popup.open').forEach(p=>{ if(p!==popup) p.classList.remove('open'); });
+    popup.classList.add('open');
+  }
+  function close(){ popup.classList.remove('open'); }
+
+  display.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    popup.classList.contains('open') ? close() : open();
+  });
+  prevBtn.addEventListener('click', (e)=>{ e.stopPropagation(); viewJM--; if(viewJM<1){viewJM=12;viewJY--;} draw(); });
+  nextBtn.addEventListener('click', (e)=>{ e.stopPropagation(); viewJM++; if(viewJM>12){viewJM=1;viewJY++;} draw(); });
+  gridEl.addEventListener('click', (e)=>{
+    const cell = e.target.closest('.jday');
+    if(!cell) return;
+    const iso = cell.dataset.iso;
+    hidden.value = iso;
+    display.value = jalaliLabel(iso);
+    hidden.dispatchEvent(new Event('change'));
+    close();
+  });
+  popup.addEventListener('click', (e)=>e.stopPropagation());
+}
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.jdate-popup.open').forEach(p=>p.classList.remove('open'));
+});
+
+setupJalaliPicker('task-date','task-date-display','task-date-popup');
+setupJalaliPicker('fin-date','fin-date-display','fin-date-popup');
+setupJalaliPicker('loan-due','loan-due-display','loan-due-popup');
+setupJalaliPicker('task-reminder-date','task-reminder-date-display','task-reminder-date-popup');
+setupJalaliPicker('loan-reminder-date','loan-reminder-date-display','loan-reminder-date-popup');
+
+// ---------- Notifications & alarm ----------
+const notifyBtn = document.getElementById('notify-permission-btn');
+function refreshNotifyBtn(){
+  if('Notification' in window && Notification.permission==='granted'){
+    notifyBtn.textContent = '🔔 اعلان‌ها فعال است';
+    notifyBtn.classList.add('granted');
+  } else {
+    notifyBtn.textContent = '🔔 فعال‌سازی اعلان';
+    notifyBtn.classList.remove('granted');
+  }
+}
+notifyBtn.addEventListener('click', async ()=>{
+  if(!('Notification' in window)){
+    alert('این مرورگر از اعلان پشتیبانی نمی‌کند.'); return;
+  }
+  await Notification.requestPermission();
+  refreshNotifyBtn();
+  if(Notification.permission==='granted'){
+    new Notification('یادآور دفترچه فعال شد', {body:'وقتی برنامه باز باشد، یادآوری‌ها به شما اطلاع داده می‌شود.'});
+  }
+});
+refreshNotifyBtn();
+
+let audioCtx = null;
+function beep(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type='sine'; o.frequency.value=880;
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(0.001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.35);
+    o.start(); o.stop(audioCtx.currentTime+0.4);
+  }catch(e){}
+}
+
+let ringInterval = null;
+let ringingRefs = []; // list of {kind, id}
+
+const baseTitle = document.title;
+function startRinging(label){
+  document.getElementById('ring-text').textContent = '🔔 یادآوری: ' + label;
+  document.getElementById('ring-banner').classList.add('show');
+  document.title = '🔔 یادآوری! - ' + baseTitle;
+  if(ringInterval) return;
+  beep();
+  ringInterval = setInterval(beep, 1600);
+}
+function stopRinging(){
+  if(ringInterval){ clearInterval(ringInterval); ringInterval=null; }
+  document.getElementById('ring-banner').classList.remove('show');
+  document.title = baseTitle;
+}
+document.getElementById('ring-stop-btn').addEventListener('click', async ()=>{
+  stopRinging();
+  for(const ref of ringingRefs){
+    if(ref.kind==='task'){
+      const t = tasks.find(x=>x.id===ref.id); if(t) t.reminderAlerted = true;
+    } else {
+      const l = loans.find(x=>x.id===ref.id); if(l) l.reminderAlerted = true;
+    }
+  }
+  await saveArr('tasks', tasks);
+  await saveArr('loans', loans);
+  ringingRefs = [];
+  renderTasks(); renderLoans();
+});
+
+function checkReminders(){
+  const now = new Date();
+  let due = [];
+  tasks.forEach(t=>{
+    if(t.reminder && !t.reminderAlerted && new Date(t.reminder) <= now){
+      due.push({kind:'task', id:t.id, label: t.desc ? t.desc.slice(0,40) : 'کار بدون عنوان'});
+    }
+  });
+  loans.forEach(l=>{
+    if(l.reminder && !l.reminderAlerted && new Date(l.reminder) <= now){
+      due.push({kind:'loan', id:l.id, label: 'قسط ' + (l.title||l.bank||'')});
+    }
+  });
+  if(due.length){
+    ringingRefs = due;
+    startRinging(due.map(d=>d.label).join(' · '));
+    if('Notification' in window && Notification.permission==='granted'){
+      due.forEach(d=>{
+        try{ new Notification('⏰ یادآوری دفترچه', {body:d.label}); }catch(e){}
+      });
+    }
+  }
+}
+setInterval(checkReminders, 20000);
+
+
+// ---------- Tabs ----------
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------- Speech-to-text (Web Speech API) ----------
+function handleSTTError(err){
+  const messages = {
+    'not-allowed': 'دسترسی به میکروفون رد شد. اگر این صفحه داخل پیش‌نمایش کلود باز است، ممکن است محیط اجازهٔ دسترسی به میکروفون را ندهد. فایل را دانلود کنید و مستقیماً در مرورگر (ترجیحاً کروم) باز کنید و دوباره امتحان کنید.',
+    'service-not-allowed': 'دسترسی به سرویس تشخیص گفتار مسدود شده است. فایل را دانلود کرده و مستقیم در مرورگر باز کنید.',
+    'audio-capture': 'میکروفونی پیدا نشد. مطمئن شوید دستگاه میکروفون دارد و به آن دسترسی داده‌اید.',
+    'no-speech': 'صدایی شنیده نشد. لطفاً واضح‌تر و نزدیک‌تر به میکروفون صحبت کنید.',
+    'network': 'مشکل اتصال اینترنت برای سرویس تشخیص گفتار پیش آمد.',
+    'start-failed': 'شروع تشخیص گفتار با خطا مواجه شد. کمی صبر کنید و دوباره امتحان کنید.'
+  };
+  if(err==='aborted') return;
+  const msg = messages[err] || ('خطای تشخیص گفتار: ' + err);
+  alert(msg);
+}
+
+function setupSTT(btnId, targetId, opts={}){
+  const btn = document.getElementById(btnId);
+  const target = document.getElementById(targetId);
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    btn.addEventListener('click', ()=>alert('تبدیل صدا به متن در این مرورگر پشتیبانی نمی‌شود. لطفاً از کروم روی اندروید یا کامپیوتر استفاده کنید.'));
+    return;
+  }
+  const recog = new SpeechRecognition();
+  recog.lang = 'fa-IR';
+  recog.interimResults = false;
+  recog.maxAlternatives = 1;
+  let listening = false;
+  recog.onresult = (e)=>{
+    let text = e.results[0][0].transcript;
+    if(opts.numeric){
+      const converted = faDigitsToEn(text);
+      const digits = converted.replace(/[^\d]/g,'');
+      target.value = digits || converted;
+    } else {
+      target.value = target.value ? (target.value + ' ' + text) : text;
+    }
+    target.dispatchEvent(new Event('change'));
+  };
+  recog.onend = ()=>{ listening=false; btn.classList.remove('recording'); if(opts.resetLabel) btn.textContent=opts.resetLabel; };
+  recog.onerror = (e)=>{ listening=false; btn.classList.remove('recording'); if(opts.resetLabel) btn.textContent=opts.resetLabel; handleSTTError(e.error); };
+  btn.addEventListener('click', ()=>{
+    if(listening){ recog.stop(); return; }
+    try{
+      recog.start(); listening=true; btn.classList.add('recording');
+      if(opts.resetLabel) btn.textContent='🔴 در حال شنیدن...';
+    }catch(e){ handleSTTError('start-failed'); }
+  });
+}
+setupSTT('task-stt-btn','task-desc', {resetLabel:'🎙️ تبدیل صدا به متن'});
+setupSTT('fin-stt-btn','fin-desc', {resetLabel:'🎙️ تبدیل صدا به متن'});
+setupSTT('loan-stt-btn','loan-desc', {resetLabel:'🎙️ تبدیل صدا به متن'});
+// Compact per-field mic buttons
+setupSTT('task-duration-mic','task-duration');
+setupSTT('fin-bank-mic','fin-bank');
+setupSTT('fin-amount-mic','fin-amount', {numeric:true});
+setupSTT('fin-purpose-mic','fin-purpose');
+setupSTT('loan-bank-mic','loan-bank');
+setupSTT('loan-title-mic','loan-title');
+setupSTT('loan-total-mic','loan-total', {numeric:true});
+setupSTT('loan-installment-mic','loan-installment', {numeric:true});
+setupSTT('loan-count-mic','loan-count', {numeric:true});
+
+// ---------- Voice command router (say a field's keyword to fill it) ----------
+const VOICE_MAPS = {
+  tasks: [
+    {keywords:['یادآوری'], fieldId:'task-reminder-date', mode:'date-open'},
+    {keywords:['تاریخ'], fieldId:'task-date', mode:'date-open'},
+    {keywords:['مدت زمان','مدت'], fieldId:'task-duration', mode:'text'},
+    {keywords:['توضیح','شرح'], fieldId:'task-desc', mode:'text'}
+  ],
+  finance: [
+    {keywords:['تاریخ'], fieldId:'fin-date', mode:'date-open'},
+    {keywords:['بانک'], fieldId:'fin-bank', mode:'text'},
+    {keywords:['مبلغ'], fieldId:'fin-amount', mode:'numeric'},
+    {keywords:['مقصد','بابت'], fieldId:'fin-purpose', mode:'text'},
+    {keywords:['توضیح'], fieldId:'fin-desc', mode:'text'}
+  ],
+  loans: [
+    {keywords:['سررسید','تاریخ'], fieldId:'loan-due', mode:'date-open'},
+    {keywords:['بانک'], fieldId:'loan-bank', mode:'text'},
+    {keywords:['عنوان'], fieldId:'loan-title', mode:'text'},
+    {keywords:['مبلغ کل','کل تسهیلات'], fieldId:'loan-total', mode:'numeric'},
+    {keywords:['هر قسط','مبلغ قسط','قسط'], fieldId:'loan-installment', mode:'numeric'},
+    {keywords:['تعداد اقساط','تعداد'], fieldId:'loan-count', mode:'numeric'},
+    {keywords:['توضیح'], fieldId:'loan-desc', mode:'text'}
+  ]
+};
+
+function applyVoiceCommand(rule, text){
+  if(rule.mode==='date-open'){
+    const disp = document.getElementById(rule.fieldId+'-display');
+    if(disp) disp.click();
+    return;
+  }
+  const el = document.getElementById(rule.fieldId);
+  if(!el) return;
+  if(rule.mode==='numeric'){
+    const converted = faDigitsToEn(text);
+    const digits = converted.replace(/[^\d]/g,'');
+    el.value = digits || converted;
+  } else {
+    el.value = text;
+  }
+  el.dispatchEvent(new Event('change'));
+}
+
+function routeVoiceCommand(mapKey, transcript){
+  const map = VOICE_MAPS[mapKey] || [];
+  const trimmed = transcript.trim();
+  for(const rule of map){
+    for(const kw of rule.keywords){
+      if(trimmed.indexOf(kw)===0){
+        const rest = trimmed.slice(kw.length).replace(/^[\s،:]+/, '');
+        applyVoiceCommand(rule, rest);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function setupVoiceCommand(btnId, statusId, mapKey){
+  const btn = document.getElementById(btnId);
+  const status = document.getElementById(statusId);
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    btn.addEventListener('click', ()=>alert('فرمان صوتی در این مرورگر پشتیبانی نمی‌شود. لطفاً از کروم استفاده کنید.'));
+    return;
+  }
+  const recog = new SpeechRecognition();
+  recog.lang = 'fa-IR';
+  recog.continuous = true;
+  recog.interimResults = false;
+  recog.maxAlternatives = 1;
+  let active = false;
+  recog.onresult = (e)=>{
+    const idx = e.resultIndex;
+    const transcript = e.results[idx][0].transcript;
+    const matched = routeVoiceCommand(mapKey, transcript);
+    status.textContent = matched ? ('✅ ثبت شد در فیلد مربوطه: «'+transcript+'»') : ('❓ کلمهٔ کلیدی شناسایی نشد: «'+transcript+'» — با یکی از کلمات بالا شروع کنید.');
+  };
+  recog.onerror = (e)=>{
+    active = false;
+    btn.classList.remove('recording');
+    btn.textContent = '🎙️ فرمان صوتی هوشمند';
+    handleSTTError(e.error);
+  };
+  recog.onend = ()=>{
+    if(active){
+      try{ recog.start(); }catch(e){}
+    } else {
+      btn.classList.remove('recording');
+      btn.textContent = '🎙️ فرمان صوتی هوشمند';
+    }
+  };
+  btn.addEventListener('click', ()=>{
+    if(active){
+      active = false;
+      recog.stop();
+    } else {
+      active = true;
+      btn.classList.add('recording');
+      btn.textContent = '⏹️ توقف فرمان صوتی';
+      status.textContent = 'در حال گوش دادن...';
+      try{ recog.start(); }
+      catch(e){ handleSTTError('start-failed'); active=false; btn.classList.remove('recording'); btn.textContent='🎙️ فرمان صوتی هوشمند'; }
+    }
+  });
+}
+setupVoiceCommand('task-voice-cmd-btn','task-voice-cmd-status','tasks');
+setupVoiceCommand('fin-voice-cmd-btn','fin-voice-cmd-status','finance');
+setupVoiceCommand('loan-voice-cmd-btn','loan-voice-cmd-status','loans');
+
+// ---------- Voice recording (MediaRecorder) ----------
+function setupRecorder(btnId, previewId, storeCb){
+  const btn = document.getElementById(btnId);
+  const preview = document.getElementById(previewId);
+  let mediaRecorder, chunks=[], recording=false, currentBase64=null;
+  btn.addEventListener('click', async ()=>{
+    if(!recording){
+      if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        alert('ضبط صدا در این مرورگر پشتیبانی نمی‌شود.'); return;
+      }
+      try{
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        chunks=[];
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e=>chunks.push(e.data);
+        mediaRecorder.onstop = async ()=>{
+          const blob = new Blob(chunks, {type:'audio/webm'});
+          const reader = new FileReader();
+          reader.onload = ()=>{
+            currentBase64 = reader.result;
+            preview.innerHTML = '';
+            const audio = document.createElement('audio');
+            audio.controls = true; audio.src = currentBase64;
+            preview.appendChild(audio);
+            storeCb(currentBase64);
+          };
+          reader.readAsDataURL(blob);
+          stream.getTracks().forEach(t=>t.stop());
+        };
+        mediaRecorder.start();
+        recording = true;
+        btn.classList.add('recording');
+        btn.textContent='⏹️ توقف ضبط';
+      }catch(e){
+        if(e && e.name==='NotAllowedError'){
+          alert('دسترسی به میکروفون رد شد. اگر این صفحه داخل پیش‌نمایش کلود باز است، محیط ممکن است اجازهٔ دسترسی به میکروفون را ندهد. فایل را دانلود کرده و مستقیم در مرورگر باز کنید.');
+        } else if(e && e.name==='NotFoundError'){
+          alert('میکروفونی پیدا نشد.');
+        } else {
+          alert('دسترسی به میکروفون امکان‌پذیر نشد: ' + (e && e.message ? e.message : 'خطای نامشخص'));
+        }
+      }
+    } else {
+      mediaRecorder.stop();
+      recording = false;
+      btn.classList.remove('recording');
+      btn.textContent='⏺️ ضبط صدا';
+    }
+  });
+  return ()=>currentBase64;
+}
+let taskVoiceGetter = setupRecorder('task-rec-btn','task-audio-preview', v=>{ taskVoiceData=v; });
+let finVoiceGetter = setupRecorder('fin-rec-btn','fin-audio-preview', v=>{ finVoiceData=v; });
+let taskVoiceData=null, finVoiceData=null;
+
+// ---------- File attach previews ----------
+let taskFileData=null, finFileData=null, loanFileData=null;
+function setupFileInput(inputId, previewId, setFn){
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  input.addEventListener('change', async ()=>{
+    const f = input.files[0];
+    if(!f) return;
+    if(f.size > 4.5*1024*1024){
+      alert('حجم فایل زیاد است (حداکثر حدود ۴٫۵ مگابایت).');
+      input.value=''; return;
+    }
+    const b64 = await fileToBase64(f);
+    setFn({name:f.name, data:b64});
+    preview.innerHTML = `<div class="file-chip">📎 ${f.name}</div>`;
+  });
+}
+setupFileInput('task-file','task-file-preview', v=>taskFileData=v);
+setupFileInput('fin-file','fin-file-preview', v=>finFileData=v);
+setupFileInput('loan-file','loan-file-preview', v=>loanFileData=v);
+
+// ---------- TASKS ----------
+async function renderTasks(){
+  const list = document.getElementById('tasks-list');
+  if(!tasks.length){ list.innerHTML = '<div class="empty">هنوز کاری ثبت نشده است.</div>'; return; }
+  const doneCount = tasks.filter(t=>t.done).length;
+  const sorted = [...tasks].sort((a,b)=>{
+    if(!!a.done !== !!b.done) return a.done ? 1 : -1;
+    return (b.date||'').localeCompare(a.date||'');
+  });
+  list.innerHTML = `<div class="item-meta" style="margin-bottom:8px;">${toFa(doneCount)} از ${toFa(tasks.length)} کار انجام شده</div>` +
+    sorted.map(t=>{
+    let badge = '';
+    if(t.reminder){
+      const rd = new Date(t.reminder);
+      badge = rd < new Date() ? '<span class="badge badge-overdue">یادآوری گذشته</span>' : '<span class="badge badge-due">یادآوری فعال</span>';
+    }
+    return `<div class="item ${t.done?'done':''}" data-id="${t.id}">
+      <div class="item-top task-row">
+        <input type="checkbox" class="task-check" ${t.done?'checked':''} onchange="toggleTaskDone('${t.id}')">
+        <div class="task-body">
+          <div class="item-title">${t.desc ? escapeHtml(t.desc).slice(0,80) : '(بدون توضیح)'}</div>
+          <div class="item-meta">📅 ${jalaliLabel(t.date)} &nbsp; ⏱ ${escapeHtml(t.duration||'-')} ${badge}</div>
+          ${t.reminder ? `<div class="item-meta">⏰ یادآوری: ${t.reminder.replace('T',' ')}</div>`:''}
+          ${t.file ? `<div class="item-meta">📎 <a href="${t.file.data}" download="${t.file.name}">${escapeHtml(t.file.name)}</a></div>`:''}
+          ${t.voice ? `<audio controls src="${t.voice}"></audio>` : ''}
+        </div>
+        <div class="item-actions">
+          <button class="icon-btn" onclick="deleteItem('tasks','${t.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleTaskDone(id){
+  const t = tasks.find(x=>x.id===id);
+  if(!t) return;
+  t.done = !t.done;
+  await saveArr('tasks', tasks);
+  renderTasks();
+  renderCalendar();
+}
+window.toggleTaskDone = toggleTaskDone;
+
+document.getElementById('task-save-btn').addEventListener('click', async ()=>{
+  const desc = document.getElementById('task-desc').value.trim();
+  const date = document.getElementById('task-date').value;
+  const rDate = document.getElementById('task-reminder-date').value;
+  const rTime = document.getElementById('task-reminder-time').value;
+  const reminder = (rDate && rTime) ? (rDate + 'T' + rTime) : '';
+  if(!desc && !taskVoiceData){ alert('لطفاً توضیح کار یا یک یادداشت صوتی وارد کنید.'); return; }
+  tasks.push({
+    id:uid(),
+    date: date || new Date().toISOString().slice(0,10),
+    duration: document.getElementById('task-duration').value.trim(),
+    desc,
+    reminder,
+    reminderAlerted: false,
+    done: false,
+    file: taskFileData,
+    voice: taskVoiceData
+  });
+  await saveArr('tasks', tasks);
+  // reset form
+  document.getElementById('task-desc').value='';
+  document.getElementById('task-duration').value='';
+  document.getElementById('task-date').value='';
+  document.getElementById('task-date-display').value='';
+  document.getElementById('task-reminder-date').value='';
+  document.getElementById('task-reminder-date-display').value='';
+  document.getElementById('task-reminder-time').value='';
+  document.getElementById('task-file-preview').innerHTML='';
+  document.getElementById('task-audio-preview').innerHTML='';
+  taskFileData=null; taskVoiceData=null;
+  renderTasks();
+  renderCalendar();
+});
+
+// ---------- FINANCE ----------
+function renderFinanceSummary(){
+  let income=0, expense=0;
+  finances.forEach(f=>{
+    const amt = Number(f.amount)||0;
+    if(f.type==='income') income+=amt; else expense+=amt;
+  });
+  document.getElementById('sum-income').textContent = fmtNum(income);
+  document.getElementById('sum-expense').textContent = fmtNum(expense);
+  document.getElementById('sum-balance').textContent = fmtNum(income-expense);
+}
+
+async function renderFinance(){
+  const list = document.getElementById('fin-list');
+  renderFinanceSummary();
+  if(!finances.length){ list.innerHTML = '<div class="empty">هنوز تراکنشی ثبت نشده است.</div>'; return; }
+  const sorted = [...finances].sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  list.innerHTML = sorted.map(f=>{
+    const badge = f.type==='income' ? '<span class="badge badge-income">واریزی</span>' : '<span class="badge badge-expense">برداشت</span>';
+    return `<div class="item" data-id="${f.id}">
+      <div class="item-top">
+        <div>
+          <div class="item-title">${escapeHtml(f.purpose||'(بدون عنوان)')} ${badge}</div>
+          <div class="item-meta">📅 ${jalaliLabel(f.date)} &nbsp; 🏦 ${escapeHtml(f.bank||'-')} &nbsp; 💰 ${fmtNum(f.amount)} تومان</div>
+          ${f.desc ? `<div class="item-meta">${escapeHtml(f.desc)}</div>`:''}
+          ${f.file ? `<div class="item-meta">📎 <a href="${f.file.data}" download="${f.file.name}">${escapeHtml(f.file.name)}</a></div>`:''}
+        </div>
+        <div class="item-actions">
+          <button class="icon-btn" onclick="deleteItem('finances','${f.id}')">🗑️</button>
+        </div>
+      </div>
+      ${f.voice ? `<audio controls src="${f.voice}"></audio>` : ''}
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('fin-save-btn').addEventListener('click', async ()=>{
+  const amount = document.getElementById('fin-amount').value;
+  const bank = document.getElementById('fin-bank').value.trim();
+  if(!amount || !bank){ alert('لطفاً حداقل نام بانک و مبلغ را وارد کنید.'); return; }
+  finances.push({
+    id:uid(),
+    date: document.getElementById('fin-date').value || new Date().toISOString().slice(0,10),
+    type: document.getElementById('fin-type').value,
+    bank,
+    amount,
+    purpose: document.getElementById('fin-purpose').value.trim(),
+    desc: document.getElementById('fin-desc').value.trim(),
+    file: finFileData,
+    voice: finVoiceData
+  });
+  await saveArr('finances', finances);
+  document.getElementById('fin-amount').value='';
+  document.getElementById('fin-bank').value='';
+  document.getElementById('fin-purpose').value='';
+  document.getElementById('fin-desc').value='';
+  document.getElementById('fin-date').value='';
+  document.getElementById('fin-date-display').value='';
+  document.getElementById('fin-file-preview').innerHTML='';
+  document.getElementById('fin-audio-preview').innerHTML='';
+  finFileData=null; finVoiceData=null;
+  renderFinance();
+  renderCalendar();
+});
+
+// ---------- LOANS ----------
+async function renderLoans(){
+  const list = document.getElementById('loans-list');
+  if(!loans.length){ list.innerHTML = '<div class="empty">هنوز تسهیلاتی ثبت نشده است.</div>'; return; }
+  list.innerHTML = loans.map(l=>{
+    const paid = Number(l.paid)||0, count = Number(l.count)||0;
+    const pct = count>0 ? Math.min(100, Math.round(paid/count*100)) : 0;
+    let badge='';
+    if(l.due){
+      const dd = new Date(l.due);
+      const now = new Date();
+      badge = dd < now ? '<span class="badge badge-overdue">سررسید گذشته</span>' : '<span class="badge badge-due">در انتظار پرداخت</span>';
+    }
+    return `<div class="item" data-id="${l.id}">
+      <div class="item-top">
+        <div style="flex:1;">
+          <div class="item-title">${escapeHtml(l.title||'(بدون عنوان)')} ${badge}</div>
+          <div class="item-meta">🏦 ${escapeHtml(l.bank||'-')} &nbsp; 💰 مبلغ کل: ${fmtNum(l.total)} تومان</div>
+          <div class="item-meta">💳 هر قسط: ${fmtNum(l.installment)} تومان &nbsp; | &nbsp; اقساط پرداختی: ${fmtNum(paid)} از ${fmtNum(count)}</div>
+          <progress value="${pct}" max="100"></progress>
+          ${l.due ? `<div class="item-meta">📅 سررسید بعدی: ${jalaliLabel(l.due)}</div>`:''}
+          ${l.reminder ? `<div class="item-meta">⏰ یادآوری: ${l.reminder.replace('T',' ')}</div>`:''}
+          ${l.desc ? `<div class="item-meta">${escapeHtml(l.desc)}</div>`:''}
+          ${l.file ? `<div class="item-meta">📎 <a href="${l.file.data}" download="${l.file.name}">${escapeHtml(l.file.name)}</a></div>`:''}
+        </div>
+        <div class="item-actions">
+          <button class="icon-btn" title="پرداخت یک قسط" onclick="payInstallment('${l.id}')">✅</button>
+          <button class="icon-btn" onclick="deleteItem('loans','${l.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('loan-save-btn').addEventListener('click', async ()=>{
+  const bank = document.getElementById('loan-bank').value.trim();
+  const title = document.getElementById('loan-title').value.trim();
+  if(!bank || !title){ alert('لطفاً نام بانک و عنوان تسهیلات را وارد کنید.'); return; }
+  const rDate = document.getElementById('loan-reminder-date').value;
+  const rTime = document.getElementById('loan-reminder-time').value;
+  const reminder = (rDate && rTime) ? (rDate + 'T' + rTime) : '';
+  loans.push({
+    id:uid(),
+    bank, title,
+    total: document.getElementById('loan-total').value,
+    installment: document.getElementById('loan-installment').value,
+    count: document.getElementById('loan-count').value,
+    paid: document.getElementById('loan-paid').value || 0,
+    due: document.getElementById('loan-due').value,
+    reminder,
+    reminderAlerted: false,
+    desc: document.getElementById('loan-desc').value.trim(),
+    file: loanFileData
+  });
+  await saveArr('loans', loans);
+  ['loan-bank','loan-title','loan-total','loan-installment','loan-count','loan-due','loan-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('loan-due-display').value='';
+  document.getElementById('loan-reminder-date').value='';
+  document.getElementById('loan-reminder-date-display').value='';
+  document.getElementById('loan-reminder-time').value='';
+  document.getElementById('loan-paid').value=0;
+  document.getElementById('loan-file-preview').innerHTML='';
+  loanFileData=null;
+  renderLoans();
+  renderCalendar();
+});
+
+async function payInstallment(id){
+  const l = loans.find(x=>x.id===id);
+  if(!l) return;
+  l.paid = (Number(l.paid)||0) + 1;
+  await saveArr('loans', loans);
+  renderLoans();
+}
+
+// ---------- CALENDAR (native Jalali) ----------
+let calJY = todayJ[0], calJM = todayJ[1];
+let calSelectedIso = null;
+
+function renderCalendar(){
+  document.getElementById('cal-title').textContent = JALALI_MONTHS[calJM-1] + ' ' + toFa(calJY);
+
+  const dowEl = document.getElementById('cal-dow');
+  const dows = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنج‌شنبه','جمعه'];
+  dowEl.innerHTML = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  const [gy1,gm1,gd1] = toGregorian(calJY, calJM, 1);
+  const firstGDate = new Date(gy1, gm1-1, gd1);
+  const jsDow = firstGDate.getDay(); // Sun=0
+  const leading = (jsDow + 1) % 7; // Sat=0 offset
+
+  const monthLen = jalaliMonthLength(calJY, calJM);
+  let prevJM = calJM-1, prevJY = calJY;
+  if(prevJM < 1){ prevJM = 12; prevJY = calJY-1; }
+  const prevMonthLen = jalaliMonthLength(prevJY, prevJM);
+
+  const todayIso = new Date().toISOString().slice(0,10);
+
+  function gIsoFromJalali(jy,jm,jd){
+    const [gy,gm,gd] = toGregorian(jy,jm,jd);
+    return gy+'-'+String(gm).padStart(2,'0')+'-'+String(gd).padStart(2,'0');
+  }
+
+  let cells = [];
+  for(let i=0;i<leading;i++){
+    const d = prevMonthLen - leading + 1 + i;
+    cells.push({jd:d, iso: gIsoFromJalali(prevJY,prevJM,d), other:true});
+  }
+  for(let d=1; d<=monthLen; d++){
+    cells.push({jd:d, iso: gIsoFromJalali(calJY,calJM,d), other:false});
+  }
+  let nextJM = calJM+1, nextJY = calJY;
+  if(nextJM > 12){ nextJM = 1; nextJY = calJY+1; }
+  let nd = 1;
+  while(cells.length % 7 !== 0){
+    cells.push({jd:nd, iso: gIsoFromJalali(nextJY,nextJM,nd), other:true});
+    nd++;
+  }
+
+  const gridEl = document.getElementById('cal-grid');
+  gridEl.innerHTML = cells.map(c=>{
+    const hasTask = tasks.some(t=>t.date===c.iso);
+    const hasFin = finances.some(f=>f.date===c.iso);
+    const hasLoan = loans.some(l=>l.due===c.iso);
+    let cls = 'cal-cell';
+    if(c.other) cls += ' other-month';
+    if(c.iso===todayIso) cls += ' today';
+    if(c.iso===calSelectedIso) cls += ' selected';
+    return `<div class="${cls}" onclick="selectCalDay('${c.iso}')">
+      <div class="g-num">${toFa(c.jd)}</div>
+      <div class="cal-dots">
+        ${hasTask?'<span class="cal-dot dot-task"></span>':''}
+        ${hasFin?'<span class="cal-dot dot-fin"></span>':''}
+        ${hasLoan?'<span class="cal-dot dot-loan"></span>':''}
+      </div>
+    </div>`;
+  }).join('');
+
+  renderDayPanel();
+}
+
+function selectCalDay(iso){
+  calSelectedIso = iso;
+  renderCalendar();
+}
+window.selectCalDay = selectCalDay;
+
+function renderDayPanel(){
+  const panel = document.getElementById('day-panel');
+  if(!calSelectedIso){
+    panel.innerHTML = '<div class="empty">یک روز را از تقویم انتخاب کنید تا برنامه آن روز را ببینید.</div>';
+    return;
+  }
+  const dTasks = tasks.filter(t=>t.date===calSelectedIso);
+  const dFin = finances.filter(f=>f.date===calSelectedIso);
+  const dLoans = loans.filter(l=>l.due===calSelectedIso);
+  let html = `<h3>📅 ${jalaliLabel(calSelectedIso)}</h3>`;
+  if(!dTasks.length && !dFin.length && !dLoans.length){
+    html += '<div class="empty">برنامه‌ای برای این روز ثبت نشده.</div>';
+  } else {
+    dTasks.forEach(t=>{
+      html += `<div class="item ${t.done?'done':''}"><div class="item-title">🗒️ ${escapeHtml(t.desc||'(بدون توضیح)')}</div><div class="item-meta">⏱ ${escapeHtml(t.duration||'-')}</div></div>`;
+    });
+    dFin.forEach(f=>{
+      const badge = f.type==='income' ? '<span class="badge badge-income">واریزی</span>' : '<span class="badge badge-expense">برداشت</span>';
+      html += `<div class="item"><div class="item-title">${escapeHtml(f.purpose||'(بدون عنوان)')} ${badge}</div><div class="item-meta">🏦 ${escapeHtml(f.bank||'-')} &nbsp; 💰 ${fmtNum(f.amount)} تومان</div></div>`;
+    });
+    dLoans.forEach(l=>{
+      html += `<div class="item"><div class="item-title">💳 سررسید قسط: ${escapeHtml(l.title||l.bank||'')}</div><div class="item-meta">💰 ${fmtNum(l.installment)} تومان</div></div>`;
+    });
+  }
+  html += `<div class="quick-add">
+    <input type="text" id="quick-task-input" placeholder="افزودن کار سریع برای این روز...">
+    <button class="btn btn-primary" id="quick-task-btn">افزودن</button>
+  </div>`;
+  panel.innerHTML = html;
+  document.getElementById('quick-task-btn').addEventListener('click', async ()=>{
+    const val = document.getElementById('quick-task-input').value.trim();
+    if(!val) return;
+    tasks.push({id:uid(), date: calSelectedIso, duration:'', desc: val, reminder:'', reminderAlerted:false, done:false, file:null, voice:null});
+    await saveArr('tasks', tasks);
+    renderTasks(); renderCalendar();
+  });
+}
+
+document.getElementById('cal-prev').addEventListener('click', ()=>{
+  calJM--;
+  if(calJM < 1){ calJM = 12; calJY--; }
+  renderCalendar();
+});
+document.getElementById('cal-next').addEventListener('click', ()=>{
+  calJM++;
+  if(calJM > 12){ calJM = 1; calJY++; }
+  renderCalendar();
+});
+document.getElementById('cal-today-btn').addEventListener('click', ()=>{
+  calJY = todayJ[0]; calJM = todayJ[1];
+  calSelectedIso = new Date().toISOString().slice(0,10);
+  renderCalendar();
+});
+
+// ---------- PWA install prompt ----------
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  document.getElementById('install-btn').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', async ()=>{
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    document.getElementById('install-btn').classList.remove('show');
+  } else {
+    alert('برای نصب: در مرورگر گوشی از منو گزینه «Add to Home Screen» یا «افزودن به صفحه اصلی» را بزنید.');
+  }
+});
+
+// ---------- Shared delete ----------
+async function deleteItem(type, id){
+  if(!confirm('حذف شود؟')) return;
+  if(type==='tasks'){ tasks = tasks.filter(t=>t.id!==id); await saveArr('tasks', tasks); renderTasks(); }
+  if(type==='finances'){ finances = finances.filter(f=>f.id!==id); await saveArr('finances', finances); renderFinance(); }
+  if(type==='loans'){ loans = loans.filter(l=>l.id!==id); await saveArr('loans', loans); renderLoans(); }
+  renderCalendar();
+}
+window.deleteItem = deleteItem;
+window.payInstallment = payInstallment;
+
+function escapeHtml(str){
+  return (str||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// ---------- Init ----------
+(async function init(){
+  try{
+    const r = await window.storage.get('sheet_api_url', false);
+    if(r && r.value){
+      SHEET_API_URL = r.value;
+      document.getElementById('sheet-url-input').value = r.value;
+    }
+  }catch(e){}
+  refreshSettingsBtn();
+  tasks = await loadArr('tasks');
+  finances = await loadArr('finances');
+  loans = await loadArr('loans');
+  renderTasks();
+  renderFinance();
+  renderLoans();
+  calSelectedIso = new Date().toISOString().slice(0,10);
+  renderCalendar();
+  checkReminders();
+})();
+</script>
+</body>
+</html>
